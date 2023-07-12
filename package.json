@@ -1,5 +1,5 @@
 {
-  "name": "text-editor",
+  "name": "@ip-001/text-editor",
   "description": "A web component for editing text/html following open-wc recommendations",
   "version": "0.0.0",
   "author": "ip-001 <ip-001@thinkpad.local>",
@@ -81,5 +81,22 @@
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
+  "types": "./dist/src/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ip-001/text-editor.git"
+  },
+  "keywords": [
+    "text-editor",
+    "open-wc",
+    "typescript"
+  ],
+  "bugs": {
+    "url": "https://github.com/ip-001/text-editor/issues"
+  },
+  "homepage": "https://github.com/ip-001/text-editor#readme"
 }
