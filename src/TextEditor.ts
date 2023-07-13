@@ -17,13 +17,16 @@ export class TextEditor extends LitElement {
   @property({ type: Boolean, reflect: true })
   fullscreen: boolean = false;
 
-  @query('main')
+  @query('.text-editor')
   content!: HTMLElement;
+
+  @query('.code-editor')
+  code!: HTMLElement;
 
   @queryAll('button')
   buttons!: HTMLButtonElement[];
 
-  private onClick(e: Event) {
+  private onTextClick(e: Event) {
     this.content.focus();
 
     const button = <HTMLButtonElement>e.target;
@@ -34,14 +37,20 @@ export class TextEditor extends LitElement {
     button.classList.toggle('selected', state);
   }
 
-  private onInput() {
+  private onTextInput() {
     if (this.content.firstChild && this.content.firstChild.nodeType === 3)
       document.execCommand('formatBlock', false, '<p>');
 
+    this.code.textContent = this.content.innerHTML;
     this.value = this.content.innerHTML;
   }
 
-  private onUpdate() {
+  private onCodeInput() {
+    this.content.innerHTML = this.code.textContent!;
+    this.value = this.code.textContent!;
+  }
+
+  private onTextUpdate() {
     for (const button of this.buttons) {
       const state = document.queryCommandState(button.name);
       button.classList.toggle('selected', state);
@@ -55,9 +64,11 @@ export class TextEditor extends LitElement {
   firstUpdated() {
     if (this.value) this.content.innerHTML = this.value;
 
-    this.content.addEventListener('input', this.onInput.bind(this));
-    this.content.addEventListener('mouseup', this.onUpdate.bind(this));
-    this.content.addEventListener('keyup', this.onUpdate.bind(this));
+    this.content.addEventListener('input', this.onTextInput.bind(this));
+    this.content.addEventListener('mouseup', this.onTextUpdate.bind(this));
+    this.content.addEventListener('keyup', this.onTextUpdate.bind(this));
+
+    this.code.addEventListener('input', this.onCodeInput.bind(this));
   }
 
   render() {
@@ -77,7 +88,7 @@ export class TextEditor extends LitElement {
                   name=${name}
                   type="button"
                   data-command=${command}
-                  @click=${this.onClick}
+                  @click=${this.onTextClick}
                 >
                   <span class="material-icons-round">${icon}</span>
                 </button>
@@ -96,7 +107,10 @@ export class TextEditor extends LitElement {
         </section>
       </header>
 
-      <main contenteditable="true"></main>
+      <main>
+        <section contenteditable="true" class="text-editor"></section>
+        <section contenteditable="true" class="code-editor"></section>
+      </main>
     `;
   }
 

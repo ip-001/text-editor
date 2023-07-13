@@ -36,6 +36,10 @@ export const TextEditorStyles = css`
     box-sizing: border-box;
   }
 
+  header > section {
+    display: flex;
+  }
+
   button {
     all: initial;
     margin: 0;
@@ -64,10 +68,44 @@ export const TextEditorStyles = css`
   main {
     grid-area: main;
     height: auto;
-    min-height: 100px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      'text-editor'
+      'code-editor';
+    box-sizing: border-box;
+  }
+
+  .text-editor {
+    grid-area: text-editor;
+    height: auto;
+    min-height: 150px;
     width: 100%;
     margin: 0;
     padding: 0.5rem;
+    font-family: var(--text-editor-font-family, sans-serif);
+    font-size: var(--text-editor-font-size, 16px);
+    border-bottom: 1px solid var(--text-editor-border-color, #ecf0f1);
+    overflow: hidden;
+    resize: vertical;
+    outline: 0px solid transparent;
+    box-sizing: border-box;
+  }
+
+  .code-editor {
+    grid-area: code-editor;
+    height: auto;
+    min-height: 50px;
+    width: 100%;
+    margin: 0;
+    padding: 0.5rem;
+    background-color: var(--text-editor-background-color, #ecf0f1);
+    font-family: var(--text-editor-font-family, monospace);
+    font-size: var(--text-editor-font-size, 16px);
     overflow: hidden;
     resize: vertical;
     outline: 0px solid transparent;
