@@ -71,15 +71,17 @@ export class TextEditor extends LitElement {
         <section>
           ${map(
             this.actions,
-            (a: Action) =>
-              html`<button
-                name=${a.name}
-                type="button"
-                data-command=${a.command}
-                @click=${this.onClick}
-              >
-                <span class="material-icons-round">${a.icon}</span>
-              </button>`
+            ({ name, command, icon }) =>
+              html`
+                <button
+                  name=${name}
+                  type="button"
+                  data-command=${command}
+                  @click=${this.onClick}
+                >
+                  <span class="material-icons-round">${icon}</span>
+                </button>
+              `
           )}
         </section>
 
