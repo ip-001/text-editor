@@ -1,7 +1,7 @@
 {
   "name": "@ip-001/text-editor",
   "description": "A web component for editing text/html following open-wc recommendations",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "ip-001 <ip-001@thinkpad.local>",
   "license": "MIT",
   "type": "module",
