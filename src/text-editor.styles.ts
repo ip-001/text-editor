@@ -33,11 +33,14 @@ export const TextEditorStyles = css`
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid var(--text-editor-border-color, #ecf0f1);
+    background-color: white;
     box-sizing: border-box;
   }
 
   header > section {
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
 
   button {
@@ -77,6 +80,7 @@ export const TextEditorStyles = css`
     grid-template-areas:
       'text-editor'
       'code-editor';
+    background-color: white;
     box-sizing: border-box;
   }
 
