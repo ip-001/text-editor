@@ -59,6 +59,11 @@ export class TextEditor extends LitElement {
     }
   }
 
+  private onCodeUpdate() {
+    const button = this.shadowRoot?.querySelector('[name=code-editor]');
+    button?.classList.toggle('selected', true);
+  }
+
   private toggleCodeEditor(e: Event) {
     const button = <HTMLButtonElement>e.target;
     button.classList.toggle('selected');
@@ -78,6 +83,8 @@ export class TextEditor extends LitElement {
     this.content.addEventListener('keyup', this.onTextUpdate.bind(this));
 
     this.code.addEventListener('input', this.onCodeInput.bind(this));
+    this.code.addEventListener('mouseup', this.onCodeUpdate.bind(this));
+    this.code.addEventListener('keyup', this.onCodeUpdate.bind(this));
   }
 
   render() {
