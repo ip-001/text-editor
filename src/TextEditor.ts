@@ -17,6 +17,9 @@ export class TextEditor extends LitElement {
   @property({ type: Boolean, reflect: true })
   fullscreen: boolean = false;
 
+  @property({ type: Boolean, reflect: true })
+  required!: boolean;
+
   @query('.text-editor')
   content!: HTMLElement;
 
