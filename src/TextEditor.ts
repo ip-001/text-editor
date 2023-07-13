@@ -57,6 +57,13 @@ export class TextEditor extends LitElement {
     }
   }
 
+  private toggleCodeEditor(e: Event) {
+    const button = <HTMLButtonElement>e.target;
+    button.classList.toggle('selected');
+
+    this.code.hidden = !this.code.hidden;
+  }
+
   private toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
   }
@@ -94,6 +101,14 @@ export class TextEditor extends LitElement {
                 </button>
               `
           )}
+
+          <button
+            name="code-editor"
+            type="button"
+            @click=${this.toggleCodeEditor}
+          >
+            <span class="material-icons-round">code</span>
+          </button>
         </section>
 
         <section>
@@ -109,7 +124,7 @@ export class TextEditor extends LitElement {
 
       <main>
         <section contenteditable="true" class="text-editor"></section>
-        <section contenteditable="true" class="code-editor"></section>
+        <section contenteditable="true" class="code-editor" hidden></section>
       </main>
     `;
   }
