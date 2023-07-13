@@ -41,6 +41,8 @@ export class TextEditor extends LitElement {
     if (this.content.firstChild && this.content.firstChild.nodeType === 3)
       document.execCommand('formatBlock', false, '<p>');
 
+    if (this.content.innerHTML === '<br>') this.content.innerHTML = '';
+
     this.code.textContent = this.content.innerHTML;
     this.value = this.content.innerHTML;
   }
