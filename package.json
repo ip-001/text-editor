@@ -7,11 +7,6 @@
   "type": "module",
   "main": "dist/src/index.js",
   "module": "dist/src/index.js",
-  "exports": {
-    ".": "./dist/src/index.js",
-    "./text-editor.js": "./dist/src/text-editor.js",
-    "./TextEditor.js": "./dist/src/TextEditor.js"
-  },
   "scripts": {
     "analyze": "cem analyze --litelement",
     "start": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds\"",
