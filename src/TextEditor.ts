@@ -1,8 +1,9 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, html } from 'lit';
 import { property, query, queryAll } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 
 import { Action, actions } from './actions.js';
+import { TextEditorStyles } from './text-editor.styles.js';
 
 export class TextEditor extends LitElement {
   private actions: Action[] = actions;
@@ -16,128 +17,65 @@ export class TextEditor extends LitElement {
   @property({ type: Boolean, reflect: true })
   fullscreen: boolean = false;
 
-  @query('main')
+  @query('.text-editor')
   content!: HTMLElement;
+
+  @query('.code-editor')
+  code!: HTMLElement;
 
   @queryAll('button')
   buttons!: HTMLButtonElement[];
 
-  static styles = css`
-    :host {
-      height: auto;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
-      grid-template-areas:
-        'header'
-        'main  ';
-      background-color: white;
-      border: 1px solid var(--text-editor-border-color, #ecf0f1);
-      border-radius: 0.25rem;
-      box-sizing: border-box;
-    }
+  private onTextClick(e: Event) {
+    this.content.focus();
 
-    :host([fullscreen]) {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      border-radius: 0;
-      z-index: 2;
-    }
-
-    header {
-      grid-area: header;
-      height: auto;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--text-editor-border-color, #ecf0f1);
-      box-sizing: border-box;
-    }
-
-    button {
-      all: initial;
-      margin: 0;
-      padding: 14px;
-      font-family: 'Material Icons';
-      font-size: 20px;
-      background: none;
-      border: none;
-      outline: none;
-      text-decoration: none;
-    }
-
-    button:hover {
-      background-color: var(--text-editor-hover-color, #ecf0f1);
-      cursor: pointer;
-    }
-
-    button > span {
-      pointer-events: none;
-    }
-
-    button.selected {
-      background-color: var(--text-editor-hover-color, #ecf0f1);
-    }
-
-    main {
-      grid-area: main;
-      height: auto;
-      min-height: 100px;
-      width: 100%;
-      margin: 0;
-      padding: 0.5rem;
-      overflow: hidden;
-      resize: vertical;
-      outline: 0px solid transparent;
-      box-sizing: border-box;
-    }
-
-    p {
-      all: initial;
-    }
-  `;
-
-  private onClick(e: Event) {
     const button = <HTMLButtonElement>e.target;
-
     const { command } = button.dataset;
     document.execCommand(command!);
 
     const state = document.queryCommandState(button.name);
     button.classList.toggle('selected', state);
-
-    this.content.focus();
   }
 
-  private onInput() {
-    const { firstChild } = this.content;
-    if (firstChild && firstChild.nodeType === 3)
+  private onTextInput() {
+    if (this.content.firstChild && this.content.firstChild.nodeType === 3)
       document.execCommand('formatBlock', false, '<p>');
 
-    if (this.content.innerHTML === '<br>') this.content.innerHTML = '';
+    this.code.textContent = this.content.innerHTML;
     this.value = this.content.innerHTML;
   }
 
-  private onMouseup() {
+  private onCodeInput() {
+    this.content.innerHTML = this.code.textContent!;
+    this.value = this.code.textContent!;
+  }
+
+  private onTextUpdate() {
     for (const button of this.buttons) {
       const state = document.queryCommandState(button.name);
       button.classList.toggle('selected', state);
     }
   }
 
-  private onToggle() {
+  private toggleCodeEditor(e: Event) {
+    const button = <HTMLButtonElement>e.target;
+    button.classList.toggle('selected');
+
+    this.code.hidden = !this.code.hidden;
+  }
+
+  private toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
   }
 
   firstUpdated() {
     if (this.value) this.content.innerHTML = this.value;
 
-    this.content.addEventListener('input', () => this.onInput());
-    this.content.addEventListener('mouseup', () => this.onMouseup());
+    this.content.addEventListener('input', this.onTextInput.bind(this));
+    this.content.addEventListener('mouseup', this.onTextUpdate.bind(this));
+    this.content.addEventListener('keyup', this.onTextUpdate.bind(this));
+
+    this.code.addEventListener('input', this.onCodeInput.bind(this));
   }
 
   render() {
@@ -150,27 +88,46 @@ export class TextEditor extends LitElement {
       <header>
         <section>
           ${map(
-            actions,
-            (a: Action) =>
-              html`<button
-                name=${a.name}
-                type="button"
-                data-command=${a.command}
-                @click=${this.onClick}
-              >
-                <span class="material-icons-round">${a.icon}</span>
-              </button>`
+            this.actions,
+            ({ name, command, icon }) =>
+              html`
+                <button
+                  name=${name}
+                  type="button"
+                  data-command=${command}
+                  @click=${this.onTextClick}
+                >
+                  <span class="material-icons-round">${icon}</span>
+                </button>
+              `
           )}
+
+          <button
+            name="code-editor"
+            type="button"
+            @click=${this.toggleCodeEditor}
+          >
+            <span class="material-icons-round">code</span>
+          </button>
         </section>
 
         <section>
-          <button name="fullscreen" type="button" @click=${this.onToggle}>
+          <button
+            name="fullscreen"
+            type="button"
+            @click=${this.toggleFullscreen}
+          >
             <span class="material-icons-round">fullscreen</span>
           </button>
         </section>
       </header>
 
-      <main contenteditable="true"></main>
+      <main>
+        <section contenteditable="true" class="text-editor"></section>
+        <section contenteditable="true" class="code-editor" hidden></section>
+      </main>
     `;
   }
+
+  static styles = TextEditorStyles;
 }
