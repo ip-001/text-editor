@@ -8,9 +8,18 @@
   "main": "dist/src/index.js",
   "module": "dist/src/index.js",
   "exports": {
-    ".": "./dist/src/index.js",
-    "./text-editor.js": "./dist/src/text-editor.js",
-    "./TextEditor.js": "./dist/src/TextEditor.js"
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/src/index.js"
+    },
+    "./text-editor.js": {
+      "types": "./dist/src/text-editor.d.ts",
+      "default": "./dist/src/text-editor.js"
+    },
+    "./TextEditor.js": {
+      "types": "./dist/src/TextEditor.d.ts",
+      "default": "./dist/src/TextEditor.js"
+    }
   },
   "scripts": {
     "analyze": "cem analyze --litelement",
