@@ -92,9 +92,6 @@
     ]
   },
   "types": "./dist/src/index.d.ts",
-  "directories": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ip-001/text-editor.git"
